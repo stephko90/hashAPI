@@ -25,6 +25,7 @@ This will start the server which listens on port :8080 for requests
 This API contains four routes 
 
 To send data to a POST route via `curl`, the following command can be used:
+
 `curl -d "password=test" localhost:8080/hash`
 
 ## Routes

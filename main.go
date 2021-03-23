@@ -120,6 +120,9 @@ func hash(w http.ResponseWriter, req *http.Request) {
 	}(newId)
 }
 
+/**
+Converts a provided struct to JSON format and writes it to the response writer
+*/
 func outputStructToJsonResponse(w http.ResponseWriter, s interface{}) bool {
 	js, err := json.Marshal(s)
 	if err != nil {
