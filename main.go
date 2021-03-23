@@ -217,7 +217,7 @@ func stats(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Println("Server starting")
+	log.Println("Server starting")
 	mux := http.NewServeMux()
 	srv := http.Server{Addr: port, Handler: mux}
 
@@ -253,7 +253,7 @@ func main() {
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatal(err)
 	}
-	fmt.Println("bye")
+	log.Println("bye")
 }
 
 /**
