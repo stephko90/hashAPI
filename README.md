@@ -18,6 +18,8 @@ This binary can be executed from the root directory with the following command:
 
 This will start the server which listens on port :8080 for requests
 
+To test the project, run the command `go test ./...`
+
 # API Documentation
 
 ## Basics
