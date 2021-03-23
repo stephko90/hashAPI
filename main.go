@@ -35,11 +35,8 @@ type Stats struct {
 	Average int
 }
 
-type Record struct {
-	Id	int
-}
-
 type Hash struct {
+	Id   int
 	Hash string
 }
 
@@ -78,7 +75,7 @@ func hash(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		h := Hash{hash}
+		h := Hash{id, hash}
 		outputStructToJsonResponse(w, h)
 		return
 	}
@@ -99,7 +96,7 @@ func hash(w http.ResponseWriter, req *http.Request) {
 	// in an upsert if using an actual database
 	newId := savedRecords + len(store) + 1
 	store[newId] = ""
-	record := Record{newId}
+	record := Hash{newId, ""}
 	if !outputStructToJsonResponse(w, record) {
 		return
 	}
