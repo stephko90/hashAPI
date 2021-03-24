@@ -60,3 +60,46 @@ func TestValidatePassword(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestFindHashInDatabase(t *testing.T) {
+	id := 123
+	hash := "abcdf"
+	db := strings.NewReader("123 abcdf")
+
+	val := findHashInDatabase(db, id)
+
+	// hit
+	if val != hash {
+		t.Fail()
+	}
+
+	id = 1000
+	val = findHashInDatabase(db, id)
+
+	// miss
+	if val != "" {
+		t.Fail()
+	}
+}
+
+func TestGetLineCount(t *testing.T) {
+	numLines := 3
+	reader := strings.NewReader("test\ntest2\ntest3")
+
+	lines := getLineCount(reader)
+	if lines != numLines {
+		t.Fail()
+	}
+}
+
+func TestLoadTotalTime(t *testing.T) {
+	time := "123"
+	timeDb := strings.NewReader(time)
+
+	loadTotalTime(timeDb)
+
+	timeInt, _ := strconv.Atoi(time)
+	if totalTime != int64(timeInt) {
+		t.Fail()
+	}
+}

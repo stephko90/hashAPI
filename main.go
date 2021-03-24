@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -67,7 +68,12 @@ func hash(w http.ResponseWriter, req *http.Request) {
 		if val, ok := store[id]; ok {
 			hash = val
 		} else {
-			hash = findHashInDatabase(id)
+			f, err := os.Open(dbStoreName)
+			if err != nil {
+				log.Println(err)
+				return 
+			}
+			hash = findHashInDatabase(f, id)
 		}
 
 		if hash == "" {
@@ -155,15 +161,9 @@ func validatePassword(pass string) (bool, string) {
 Combs through the "database" to find the hash for the provided id
 Time Complexity : O(n) where n is the number of records in the db file
 */
-func findHashInDatabase(id int) string {
+func findHashInDatabase(f io.Reader, id int) string {
 	hash := ""
 	idString := strconv.Itoa(id)
-	f, err := os.Open(dbStoreName)
-	if err != nil {
-		log.Println(err)
-		return hash
-	}
-	defer f.Close()
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -229,7 +229,13 @@ func main() {
 	// closing this here since we need to use the "Database"
 	// in other portions of code
 	f.Close()
-	loadTotalTime()
+
+	f2, err := os.Open(timeStoreName)
+	if err != nil {
+		log.Println(err)
+	}
+	loadTotalTime(f2)
+	f2.Close()
 
 	// This function shuts down the server and saves the records
 	// created during the session to 'disk'
@@ -257,8 +263,8 @@ func main() {
 This function serves as a helper function to retreive the number of lines
 in a provided file.
 */
-func getLineCount(file *os.File) int {
-	fileScanner := bufio.NewScanner(file)
+func getLineCount(f io.Reader) int {
+	fileScanner := bufio.NewScanner(f)
 	lineCount := 0
 	for fileScanner.Scan() {
 		lineCount++
@@ -270,14 +276,8 @@ func getLineCount(file *os.File) int {
 Loads the total time taken to run ALL transactions
 into memory from storage
 */
-func loadTotalTime() {
-	f2, err := os.Open(timeStoreName)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer f2.Close()
-	scanner := bufio.NewScanner(f2)
+func loadTotalTime(f io.Reader) {
+	scanner := bufio.NewScanner(f)
 
 	allTimeStr := scanner.Text()
 	for scanner.Scan() {
