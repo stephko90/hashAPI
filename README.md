@@ -46,7 +46,8 @@ Returns the ID of the hash created by the server
 **Response**
 ```json
 {
-    "Id": 7
+    "Id": 7,
+    "Hash": ""
 }
 ```
 
@@ -61,6 +62,7 @@ This route will return the hash of the provided `id` if one is stored in local m
 **Response**
 ```json
 {
+    "Id": 7,
     "Hash": "v+nNU8e5m3vWWZkyXBIhEbNdRVUr+p5hpMEja/VUPnY="
 }
 ```
